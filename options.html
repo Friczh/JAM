@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAM - Configuration</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #202020;
+      color: #e0e0e0;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-size: 13px;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 220px;
+      background: #2b2b2b;
+      border-right: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      transition: width 0.2s ease;
+      overflow: hidden;
+    }
+
+    .sidebar.collapsed { width: 52px; }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      flex-shrink: 0;
+    }
+
+    .icon {
+      width: 28px;
+      height: 28px;
+      background: #0078d4;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .sidebar-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      white-space: nowrap;
+      opacity: 1;
+      transition: opacity 0.15s;
+    }
+
+    .sidebar.collapsed .sidebar-title { opacity: 0; pointer-events: none; }
+
+    .nav-section { flex: 1; padding: 8px 6px; }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #aaa;
+      font-size: 13px;
+      transition: background 0.1s, color 0.1s;
+      user-select: none;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .nav-item:hover { background: rgba(255,255,255,0.05); color: #e0e0e0; }
+    .nav-item.active { background: rgba(0,120,212,0.2); color: #60a8e8; }
+
+    .nav-icon {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-icon svg { width: 16px; height: 16px; fill: currentColor; }
+
+    .nav-label { opacity: 1; transition: opacity 0.15s; }
+    .sidebar.collapsed .nav-label { opacity: 0; }
+
+    .toggle-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      cursor: pointer;
+      color: #666;
+      transition: color 0.1s;
+      flex-shrink: 0;
+    }
+
+    .toggle-btn:hover { color: #aaa; }
+    .toggle-btn svg { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
+
+    .main { flex: 1; padding: 32px 40px; overflow-y: auto; }
+    .inner { max-width: 680px; }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    .page-title { font-size: 20px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+    .page-subtitle { font-size: 12px; color: #666; margin-bottom: 24px; }
+
+    .card {
+      background: #2b2b2b;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 14px 16px 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .card-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+
+    .card-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .card-row:last-child { border-bottom: none; }
+
+    .row-label { color: #e0e0e0; font-size: 13px; }
+    .row-sub { color: #666; font-size: 11px; margin-top: 2px; }
+
+    .toggle { position: relative; width: 40px; height: 20px; flex-shrink: 0; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute;
+      inset: 0;
+      background: #444;
+      border-radius: 10px;
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: background 0.15s;
+    }
+    .slider::before {
+      content: '';
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      left: 3px;
+      top: 3px;
+      background: #ccc;
+      border-radius: 50%;
+      transition: transform 0.15s;
+    }
+    input:checked + .slider { background: #0078d4; border-color: #0078d4; }
+    input:checked + .slider::before { transform: translateX(20px); background: #fff; }
+
+    .input-row {
+      padding: 10px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .input-row:last-child { border-bottom: none; }
+    .input-label { font-size: 11px; color: #888; margin-bottom: 6px; }
+
+    input[type="text"] {
+      width: 100%;
+      background: #1e1e1e;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 4px;
+      padding: 7px 10px;
+      color: #e0e0e0;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    input[type="text"]:focus { border-color: #0078d4; }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 10px 16px;
+      min-height: 44px;
+    }
+
+    .tag {
+      background: #3a3a3a;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 12px;
+      color: #ccc;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tag-remove { color: #666; cursor: pointer; font-size: 11px; }
+    .tag-remove:hover { color: #ff453a; }
+
+    .tag-input-row { padding: 0 16px 12px; display: flex; gap: 8px; }
+    .tag-input-row input { flex: 1; }
+
+    .btn-add {
+      background: #0078d4;
+      border: none;
+      border-radius: 4px;
+      color: #fff;
+      font-size: 12px;
+      padding: 0 12px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.1s;
+    }
+    .btn-add:hover { background: #006cbe; }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="icon">J</div>
+      <span class="sidebar-title">JAM</span>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-item active" onclick="showPage('referrer', this)">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+        </span>
+        <span class="nav-label">Referrer Spoof</span>
+      </div>
+
+      <div class="nav-item" onclick="showPage('visibility', this)">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+        </span>
+        <span class="nav-label">Visibility Spoof</span>
+      </div>
+
+      <div class="nav-item" onclick="showPage('scripts', this)">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
+        </span>
+        <span class="nav-label">Scripts</span>
+      </div>
+    </div>
+
+    <div class="toggle-btn" onclick="toggleSidebar()">
+      <svg id="toggle-icon" viewBox="0 0 24 24">
+        <path id="toggle-path" d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="inner">
+
+      <div class="page active" id="page-referrer">
+        <div class="page-title">Referrer Spoof</div>
+        <div class="page-subtitle">Spoof the HTTP Referer header sent with requests.</div>
+
+        <div class="card">
+          <div class="card-header"><div class="card-title">General</div></div>
+          <div class="card-row">
+            <div>
+              <div class="row-label">Enable Referrer Spoof</div>
+              <div class="row-sub">Apply to all requests globally</div>
+            </div>
+            <label class="toggle"><input type="checkbox" id="ref-enabled" checked><span class="slider"></span></label>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div class="card-title">Referrer Domain</div></div>
+          <div class="input-row">
+            <div class="input-label">Default referrer URL</div>
+            <input type="text" id="ref-default" value="https://www.google.com">
+          </div>
+          <div class="input-row">
+            <div class="input-label">Custom domain override</div>
+            <input type="text" id="ref-custom" placeholder="e.g. https://www.bing.com">
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div class="card-title">Exclude List</div></div>
+          <div class="tag-list" id="ref-exclude-list"></div>
+          <div class="tag-input-row">
+            <input type="text" id="ref-exclude-input" placeholder="Add domain to exclude...">
+            <button class="btn-add" onclick="addExclude('ref')">Add</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="page" id="page-visibility">
+        <div class="page-title">Visibility Spoof</div>
+        <div class="page-subtitle">Keep the tab appearing active and focused to the page.</div>
+
+        <div class="card">
+          <div class="card-header"><div class="card-title">General</div></div>
+          <div class="card-row">
+            <div>
+              <div class="row-label">Enable Visibility Spoof</div>
+              <div class="row-sub">Spoof visibilityState and hasFocus globally</div>
+            </div>
+            <label class="toggle"><input type="checkbox" id="vis-enabled"><span class="slider"></span></label>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div class="card-title">Exclude List</div></div>
+          <div class="tag-list" id="vis-exclude-list"></div>
+          <div class="tag-input-row">
+            <input type="text" id="vis-exclude-input" placeholder="Add domain to exclude...">
+            <button class="btn-add" onclick="addExclude('vis')">Add</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="page" id="page-scripts">
+        <div class="page-title">Scripts</div>
+        <div class="page-subtitle">Manage installed automation scripts.</div>
+
+        <div class="card">
+          <div class="card-header"><div class="card-title">Installed</div></div>
+          <div id="script-list"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>
