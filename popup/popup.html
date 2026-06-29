@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JAM</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 260px;
+      background: #2b2b2b;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+
+    .popup {
+      width: 260px;
+      background: #2b2b2b;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .header {
+      padding: 16px 16px 12px;
+      background: #323232;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .icon {
+      width: 28px;
+      height: 28px;
+      background: #0078d4;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .header-text h1 {
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: 0.01em;
+    }
+
+    .header-text span {
+      font-size: 11px;
+      color: #888;
+    }
+
+    .section {
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .section-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 8px 16px 4px;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      border-radius: 4px;
+      margin: 0 4px;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+
+    .row:hover { background: rgba(255,255,255,0.05); }
+
+    .row-text .label {
+      color: #e0e0e0;
+      font-size: 13px;
+    }
+
+    .row-text .sublabel {
+      color: #666;
+      font-size: 11px;
+      margin-top: 1px;
+    }
+
+    .toggle {
+      position: relative;
+      width: 40px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    .toggle input { opacity: 0; width: 0; height: 0; }
+
+    .slider {
+      position: absolute;
+      inset: 0;
+      background: #444;
+      border-radius: 10px;
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: background 0.15s;
+    }
+
+    .slider::before {
+      content: '';
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      left: 3px;
+      top: 3px;
+      background: #ccc;
+      border-radius: 50%;
+      transition: transform 0.15s;
+    }
+
+    input:checked + .slider {
+      background: #0078d4;
+      border-color: #0078d4;
+    }
+
+    input:checked + .slider::before {
+      transform: translateX(20px);
+      background: #fff;
+    }
+
+    .footer {
+      padding: 10px 16px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .btn-options {
+      font-size: 12px;
+      color: #60a0e0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-family: inherit;
+      transition: background 0.1s;
+    }
+
+    .btn-options:hover {
+      background: rgba(255,255,255,0.06);
+      color: #80bfff;
+    }
+  </style>
+</head>
+<body>
+  <div class="popup">
+    <div class="header">
+      <div class="icon">J</div>
+      <div class="header-text">
+        <h1>JAM</h1>
+        <span>Settings</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">General</div>
+      <label class="row">
+        <div class="row-text">
+          <div class="label">Extension</div>
+          <div class="sublabel">Master on/off</div>
+        </div>
+        <div class="toggle">
+          <input type="checkbox" id="toggle-master">
+          <span class="slider"></span>
+        </div>
+      </label>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Spoofers</div>
+      <label class="row">
+        <div class="row-text">
+          <div class="label">Referrer Spoof</div>
+          <div class="sublabel">Spoof request referrer</div>
+        </div>
+        <div class="toggle">
+          <input type="checkbox" id="toggle-referrer">
+          <span class="slider"></span>
+        </div>
+      </label>
+      <label class="row">
+        <div class="row-text">
+          <div class="label">Visibility Spoof</div>
+          <div class="sublabel">Keep tab appearing active</div>
+        </div>
+        <div class="toggle">
+          <input type="checkbox" id="toggle-visibility">
+          <span class="slider"></span>
+        </div>
+      </label>
+    </div>
+
+    <div class="footer">
+      <button class="btn-options" id="btn-options">Configuration →</button>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+  </html>
