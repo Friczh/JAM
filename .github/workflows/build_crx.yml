@@ -12,7 +12,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Restore private key
+      - name: Restore private key from secret
         env:
           JAM_PRIVATE_KEY: ${{ secrets.JAM_PRIVATE_KEY }}
         run: |
@@ -20,9 +20,9 @@ jobs:
             echo "ERROR: JAM_PRIVATE_KEY secret not set."
             exit 1
           fi
-          echo "$JAM_PRIVATE_KEY" > jam-key.pem
+          echo "$JAM_PRIVATE_KEY" > ../jam-key.pem
 
-      - name: Remove non-essentials files
+      - name: Remove non-extension files
         run: |
           # Delete repo-only files that must never end up in the .crx.
           # Add new filenames/folders here as needed - keep this list explicit
@@ -34,7 +34,7 @@ jobs:
           rm -rf .github
           rm -rf .git
           echo "Remaining files:"
-          find . -maxdepth 2 -not -path './jam-key.pem'
+          find . -maxdepth 2
 
       - name: Install Chrome
         uses: browser-actions/setup-chrome@latest
@@ -44,7 +44,7 @@ jobs:
         run: |
           "${{ steps.setup-chrome.outputs.chrome-path }}" \
             --pack-extension="$(pwd)" \
-            --pack-extension-key="$(pwd)/jam-key.pem" \
+            --pack-extension-key="$(pwd)/../jam-key.pem" \
             --no-sandbox
 
       - name: Rename output
