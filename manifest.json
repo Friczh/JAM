@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "JAM",
   "version": "1.0",
-  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr4Fu8kYkksJcESIw4mk38HmYd63XLjBtuFH0mI1COn8kTJvMTgLB4QZ7vphIElQOq5glhZInVNPTfIXIGREij04jNNjQ9oaBXGnDONawZffgrebShqml5YFfUz2hxe3pKTnVizLVxSpQj4r0NgwPK1bqM3w/2gTJpKcCSE7qtAjpj4uaEdDSAGOOsp5y040XBLOR/6CYKAgszR/Ph0OwvzoS9354eR6Fnt8PRT4eGrUhmnG5Cv9WhmepzZseWZO4q+5H2XCs5KOlryxciMEB56nHkIXlhbil17M6YULVrN1MJQE2kybJ7kpKJwGviyQe9WmPAbwPmrOOlUJOVLnKjwIDAQAB",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApV1OqfwpHMcbWPSMGLujCc8QBOzdGg+eeSojjTtmuDXsNornoO9epBAgAbxmK4pk/+uiudTRjkHouOkcHJ9HjGPvs/6T5lU/8QG/4YD70o1ZYDdVljDgSljQPPoOv6E7svpYTRpHxA22nUKn/U/4QbDikEWFEFUs/rf8rqSoh6Y1kzxxFzctwdErLLxaca6AiI6mzIym0TS437S+u5DdClRYUt0+VCBnzlJd0BaPYjQWjLMxW8FxkKRuZRlYPrMIrvV1ED/KGtRi1d0CwHz6IZNlaOhf9zpE99Z90voIf6XH+4+Vf6ZECH/b637EwxPF9NVZpV3A5VOzb85uiWv4OQIDAQAB",
   "description": "Script automation engine with session management, referrer and visibility spoofing.",
 
   "permissions": [
