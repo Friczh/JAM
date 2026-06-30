@@ -20,7 +20,8 @@ jobs:
             echo "ERROR: JAM_PRIVATE_KEY secret not set."
             exit 1
           fi
-          echo "$JAM_PRIVATE_KEY" > ../jam-key.pem
+          echo "$JAM_PRIVATE_KEY" | base64 --decode > ../jam-key.pem
+          chmod 400 ../jam-key.pem
 
       - name: Debug - Check private key length
         run: |
@@ -49,9 +50,12 @@ jobs:
 
       - name: Pack extension as CRX
         run: |
+          EXT_PATH=$(pwd)
+          KEY_PATH=$(realpath ../jam-key.pem)
+          
           "${{ steps.setup-chrome.outputs.chrome-path }}" \
-            --pack-extension="$(pwd)" \
-            --pack-extension-key="$(pwd)/../jam-key.pem" \
+            --pack-extension="$EXT_PATH" \
+            --pack-extension-key="$KEY_PATH" \
             --no-sandbox
 
       - name: Rename output
