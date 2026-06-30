@@ -22,7 +22,7 @@ jobs:
           fi
           echo "$JAM_PRIVATE_KEY" > ../jam-key.pem
 
-       - name: [Debug] Check private key length
+      - name: [Debug] Check private key length
         run: |
           wc -l ../jam-key.pem
           head -c 40 ../jam-key.pem
