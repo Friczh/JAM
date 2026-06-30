@@ -15,7 +15,7 @@ jobs:
             echo "ERROR: JAM_PRIVATE_KEY secret not set."
             exit 1
           fi
-          echo "$JAM_PRIVATE_KEY" > jam-key.pem
+          echo "$JAM_PRIVATE_KEY" | base64 --decode > jam-key.pem
 
       - name: Extract public key
         run: |
