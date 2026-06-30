@@ -60,7 +60,18 @@ jobs:
 
       - name: Rename output
         run: |
-          mv *.crx "JAM-$(date +%Y%m%d-%H%M%S).crx" 2>/dev/null || true
+          # Look for .crx in current or parent directory
+          if [ -f *.crx ]; then
+            echo "Found .crx in current directory"
+            mv *.crx "JAM-$(date +%Y%m%d-%H%M%S).crx"
+          elif [ -f ../*.crx ]; then
+            echo "Found .crx in parent directory"
+            mv ../*.crx "JAM-$(date +%Y%m%d-%H%M%S).crx"
+          else
+            echo "ERROR: No .crx file found anywhere"
+            find / -name "*.crx" 2>/dev/null || echo "No .crx files found"
+            exit 1
+          fi
           ls -la *.crx
 
       - name: Upload CRX artifact
