@@ -1,7 +1,7 @@
 const DEFAULT_REFERRER = 'https://www.google.com';
 
 let settings = {
-  referrer: { enabled: true, default: DEFAULT_REFERRER, excludes: [] },
+  referrer: { enabled: true, default: DEFAULT_REFERRER, custom: '', excludes: [] },
   visibility: { enabled: true, excludes: [] }
 };
 
@@ -22,12 +22,16 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
       return { requestHeaders: details.requestHeaders };
     }
 
+    const newReferrer = (settings.referrer.custom && settings.referrer.custom.trim())
+      ? settings.referrer.custom.trim()
+      : settings.referrer.default;
+
     const headers = details.requestHeaders.filter(h => h.name.toLowerCase() !== 'referer');
-    headers.push({ name: 'Referer', value: settings.referrer.default });
+    headers.push({ name: 'Referer', value: newReferrer });
     return { requestHeaders: headers };
   },
   { urls: ['<all_urls>'] },
-  ['blocking', 'requestHeaders']
+  ['blocking', 'requestHeaders', 'extraHeaders']
 );
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
