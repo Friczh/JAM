@@ -4,8 +4,6 @@ on:
   workflow_dispatch:
   push:
     branches: [ main ]
-    paths:
-      - 'JAM/**'
 
 jobs:
   package:
@@ -14,7 +12,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Restore private key from secret
+      - name: Restore private key
         env:
           JAM_PRIVATE_KEY: ${{ secrets.JAM_PRIVATE_KEY }}
         run: |
@@ -24,6 +22,20 @@ jobs:
           fi
           echo "$JAM_PRIVATE_KEY" > jam-key.pem
 
+      - name: Remove non-essentials files
+        run: |
+          # Delete repo-only files that must never end up in the .crx.
+          # Add new filenames/folders here as needed - keep this list explicit
+          # rather than wildcard-deleting, so nothing extension-related is
+          # accidentally caught.
+          rm -f README.md
+          rm -f API_Test.js
+          rm -f jam-key.pem.example 2>/dev/null || true
+          rm -rf .github
+          rm -rf .git
+          echo "Remaining files:"
+          find . -maxdepth 2 -not -path './jam-key.pem'
+
       - name: Install Chrome
         uses: browser-actions/setup-chrome@latest
         id: setup-chrome
@@ -31,13 +43,13 @@ jobs:
       - name: Pack extension as CRX
         run: |
           "${{ steps.setup-chrome.outputs.chrome-path }}" \
-            --pack-extension="$(pwd)/JAM" \
+            --pack-extension="$(pwd)" \
             --pack-extension-key="$(pwd)/jam-key.pem" \
             --no-sandbox
 
       - name: Rename output
         run: |
-          mv JAM.crx "JAM-$(date +%Y%m%d-%H%M%S).crx" || true
+          mv *.crx "JAM-$(date +%Y%m%d-%H%M%S).crx" 2>/dev/null || true
           ls -la *.crx
 
       - name: Upload CRX artifact
