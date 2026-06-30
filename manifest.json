@@ -2,6 +2,7 @@
   "manifest_version": 2,
   "name": "JAM",
   "version": "1.0",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr4Fu8kYkksJcESIw4mk38HmYd63XLjBtuFH0mI1COn8kTJvMTgLB4QZ7vphIElQOq5glhZInVNPTfIXIGREij04jNNjQ9oaBXGnDONawZffgrebShqml5YFfUz2hxe3pKTnVizLVxSpQj4r0NgwPK1bqM3w/2gTJpKcCSE7qtAjpj4uaEdDSAGOOsp5y040XBLOR/6CYKAgszR/Ph0OwvzoS9354eR6Fnt8PRT4eGrUhmnG5Cv9WhmepzZseWZO4q+5H2XCs5KOlryxciMEB56nHkIXlhbil17M6YULVrN1MJQE2kybJ7kpKJwGviyQe9WmPAbwPmrOOlUJOVLnKjwIDAQAB",
   "description": "Script automation engine with session management, referrer and visibility spoofing.",
 
   "permissions": [
