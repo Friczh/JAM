@@ -104,7 +104,7 @@
     );
   }
 
-  // Events
+  // Event bindings (CSP-safe — no inline handlers)
   document.getElementById('ref-enabled').addEventListener('change', (e) => {
     settings.referrer.enabled = e.target.checked;
     saveSettings();
@@ -146,9 +146,15 @@
     if (e.key === 'Enter') addExclude('vis');
   });
 
-  window.showPage = showPage;
-  window.toggleSidebar = toggleSidebar;
-  window.addExclude = addExclude;
+  document.querySelectorAll('.nav-item').forEach(el => {
+    el.addEventListener('click', () => showPage(el.dataset.page, el));
+  });
+
+  document.getElementById('toggle-sidebar-btn').addEventListener('click', toggleSidebar);
+
+  document.querySelectorAll('.btn-add').forEach(el => {
+    el.addEventListener('click', () => addExclude(el.dataset.prefix));
+  });
 
   loadSettings();
 })();
