@@ -1,0 +1,34 @@
+name: Generate JAM Public Key (run once)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate-key:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restore private key from secret
+        env:
+          JAM_PRIVATE_KEY: ${{ secrets.JAM_PRIVATE_KEY }}
+        run: |
+          if [ -z "$JAM_PRIVATE_KEY" ]; then
+            echo "ERROR: JAM_PRIVATE_KEY secret not set."
+            exit 1
+          fi
+          echo "$JAM_PRIVATE_KEY" > jam-key.pem
+
+      - name: Extract public key
+        run: |
+          PUBKEY=$(openssl rsa -in jam-key.pem -pubout -outform DER | openssl base64 -A)
+          echo "$PUBKEY" > public_key.txt
+          echo Public key will be outputed below and uploaded as an artifact.
+          echo "================================================"
+          echo "$PUBKEY"
+          echo "================================================"
+
+      - name: Upload public_key.txt as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: jam-public-key
+          path: public_key.txt
+          retention-days: 30
