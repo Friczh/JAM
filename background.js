@@ -2,7 +2,7 @@ const DEFAULT_REFERRER = 'https://www.google.com';
 
 let settings = {
   referrer: { enabled: true, default: DEFAULT_REFERRER, custom: '', excludes: [] },
-  visibility: { enabled: true, excludes: [] }
+  visibility: { enabled: false, excludes: [] }
 };
 
 chrome.storage.local.get('jam_settings', (res) => {
@@ -13,12 +13,16 @@ chrome.storage.onChanged.addListener((changes) => {
   if (changes.jam_settings) settings = changes.jam_settings.newValue;
 });
 
+function matchesExclude(hostname, excludes) {
+  return excludes.some(d => hostname === d || hostname.endsWith('.' + d));
+}
+
 chrome.webRequest.onBeforeSendHeaders.addListener(
   (details) => {
     if (!settings.referrer.enabled) return { requestHeaders: details.requestHeaders };
 
     const url = new URL(details.url);
-    if (settings.referrer.excludes.some(d => url.hostname.includes(d))) {
+    if (matchesExclude(url.hostname, settings.referrer.excludes)) {
       return { requestHeaders: details.requestHeaders };
     }
 
