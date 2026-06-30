@@ -1,13 +1,11 @@
 (function () {
   'use strict';
 
-  // Inject bridge.js into page window scope
   const script = document.createElement('script');
   script.src = chrome.runtime.getURL('bridge.js');
   script.onload = function () { this.remove(); };
   (document.head || document.documentElement).appendChild(script);
 
-  // Relay messages from page (bridge.js) to background
   window.addEventListener('message', (event) => {
     if (event.source !== window) return;
     if (!event.data || event.data.origin !== 'jam_bridge') return;
@@ -23,13 +21,14 @@
     });
   });
 
-  // Relay visibility spoof setting to page
-  chrome.runtime.sendMessage({ type: 'GET_SETTINGS' }, (settings) => {
-    if (!settings) return;
-
+  chrome.storage.local.get('jam_settings', (res) => {
+    const settings = res.jam_settings || {};
+    const vis = settings.visibility || {};
+    const excludes = Array.isArray(vis.excludes) ? vis.excludes : [];
     const hostname = location.hostname;
-    const visEnabled = settings.visibility.enabled &&
-      !settings.visibility.excludes.some(d => hostname.includes(d));
+
+    const visEnabled = !!vis.enabled &&
+      !excludes.some(d => hostname === d || hostname.endsWith('.' + d));
 
     window.postMessage({
       origin: 'jam_content',
