@@ -1,4 +1,4 @@
-name: Generate JAM Public Key (run once)
+name: Generate public keys
 
 on:
   workflow_dispatch:
