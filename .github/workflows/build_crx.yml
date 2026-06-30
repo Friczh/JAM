@@ -1,0 +1,48 @@
+name: Build and Sign .crx 
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'JAM/**'
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Restore private key from secret
+        env:
+          JAM_PRIVATE_KEY: ${{ secrets.JAM_PRIVATE_KEY }}
+        run: |
+          if [ -z "$JAM_PRIVATE_KEY" ]; then
+            echo "ERROR: JAM_PRIVATE_KEY secret not set."
+            exit 1
+          fi
+          echo "$JAM_PRIVATE_KEY" > jam-key.pem
+
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@latest
+        id: setup-chrome
+
+      - name: Pack extension as CRX
+        run: |
+          "${{ steps.setup-chrome.outputs.chrome-path }}" \
+            --pack-extension="$(pwd)/JAM" \
+            --pack-extension-key="$(pwd)/jam-key.pem" \
+            --no-sandbox
+
+      - name: Rename output
+        run: |
+          mv JAM.crx "JAM-$(date +%Y%m%d-%H%M%S).crx" || true
+          ls -la *.crx
+
+      - name: Upload CRX artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: jam-crx
+          path: '*.crx'
+          retention-days: 30
