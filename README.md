@@ -6,21 +6,13 @@ JAM/
 ├── README.md
 ├── background.js
 ├── content.js
-├── bridge.js
+├── engine.js
 ├── popup/
 │   ├── popup.html
 │   └── popup.js
 ├── options/
 │   ├── options.html
 │   └── options.js
-├── engine/
-│   ├── session.js
-│   ├── storage.js
-│   ├── clipboard.js
-│   ├── visibility.js
-│   ├── referrer.js
-│   ├── paste.js
-│   └── api.js
 ├── scripts/
 └── icons/
     ├── 16.png
