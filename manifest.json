@@ -6,10 +6,7 @@
   "description": "Script automation engine with session management, referrer and visibility spoofing.",
 
   "permissions": [
-    "tabs",
     "storage",
-    "clipboardWrite",
-    "clipboardRead",
     "webRequest",
     "webRequestBlocking",
     "activeTab",
@@ -24,7 +21,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content.js", "engine.js"],
+      "js": ["content.js"],
       "run_at": "document_start",
       "all_frames": true
     }
