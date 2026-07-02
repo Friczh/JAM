@@ -40,7 +40,6 @@
     window.addEventListener('focus', (e) => e.stopImmediatePropagation(), true);
 
     Object.defineProperty(document, 'hasFocus', { value: () => true, configurable: true });
-    window.document.hasFocus = () => true;
   }
 
   function _resolveId(domain) {
@@ -113,8 +112,19 @@
       code(code, selector) {
         const el = document.querySelector(selector);
         if (!el) return false;
-        const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
-        setter.call(el, code);
+
+        if (el.isContentEditable) {
+          el.textContent = code;
+        } else if (el.tagName === 'TEXTAREA') {
+          const setter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set;
+          setter.call(el, code);
+        } else if (el.tagName === 'INPUT') {
+          const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+          setter.call(el, code);
+        } else {
+          return false;
+        }
+
         el.dispatchEvent(new Event('input', { bubbles: true }));
         el.dispatchEvent(new Event('change', { bubbles: true }));
         return true;
