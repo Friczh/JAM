@@ -27,7 +27,7 @@
     const excludes = Array.isArray(vis.excludes) ? vis.excludes : [];
     const hostname = location.hostname;
 
-    const visEnabled = !!vis.enabled &&
+    const visEnabled = settings.master !== false && !!vis.enabled &&
       !excludes.some(d => hostname === d || hostname.endsWith('.' + d));
 
     window.postMessage({
